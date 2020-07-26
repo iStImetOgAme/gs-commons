@@ -1,0 +1,11 @@
+com/genius/framework/multitenancy/config/MultiTenantDataSourceConfig.class
+com/genius/framework/multitenancy/config/MultiTenantMvcConfig.class
+com/genius/framework/multitenancy/provider/MultiTenantConnectionProviderImpl.class
+com/genius/framework/multitenancy/constants/TenantConstants.class
+com/genius/framework/multitenancy/provider/MultiTenantContextProvider.class
+com/genius/framework/multitenancy/config/PlatTenantConfig.class
+com/genius/framework/multitenancy/config/PlatTenant.class
+com/genius/framework/multitenancy/resolver/TenantIdentifierResolver.class
+com/genius/framework/multitenancy/event/TenantEvent.class
+com/genius/framework/multitenancy/transactional/TenantTransactionalListener.class
+com/genius/framework/multitenancy/event/TenantCleanInterceptor.class
