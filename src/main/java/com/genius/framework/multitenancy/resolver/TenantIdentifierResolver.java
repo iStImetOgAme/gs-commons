@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 
 @Component
 public class TenantIdentifierResolver implements CurrentTenantIdentifierResolver {
+    /**
+     * 请求开始时获取头部中的租户id
+     * @return
+     */
     @Override
     public String resolveCurrentTenantIdentifier() {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();

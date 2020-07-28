@@ -1,15 +1,18 @@
 package com.genius.framework.multitenancy.provider;
 
-import com.zaxxer.hikari.HikariDataSource;
+import com.genius.framework.multitenancy.config.PlatTenantConfig;
 import com.genius.framework.multitenancy.constants.TenantConstants;
+import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +21,14 @@ import java.util.Set;
 
 @Component
 public class MultiTenantContextProvider {
+
+    /**
+     * 静态方法内使用自动装配的platTenantConfig配置
+     */
+    private static MultiTenantContextProvider multiTenantContextProvider;
+
+    @Autowired
+    private PlatTenantConfig tenantConfig;
 
     private static Logger logger = LoggerFactory.getLogger(MultiTenantContextProvider.class);
 
@@ -40,6 +51,14 @@ public class MultiTenantContextProvider {
     public static String DEFAULT_DB_URL = "";
     public static String DEFAULT_DB_PARAMS = "useUnicode=true&characterEncoding=utf8&useSSL=false&autoReconnect=true&allowPublicKeyRetrieval=true&serverTimezone=UTC";
 
+    /**
+     * 初始化当前类中自动装配的类
+     */
+    @PostConstruct
+    public void init() {
+        multiTenantContextProvider = this;
+        multiTenantContextProvider.tenantConfig = this.tenantConfig;
+    }
 
 
     public static DataSource getDefaultDataSource(){
@@ -107,8 +126,14 @@ public class MultiTenantContextProvider {
      * @param currentTenant
      */
     public static void setCurrentTenant(String currentTenant) {
-        logger.info("Switch dataSource, tenant: {}", currentTenant);
-        MultiTenantContextProvider.currentTenant.set(currentTenant);
+        if (multiTenantContextProvider.tenantConfig.getEnabled()) {
+            logger.info("Switch dataSource, tenant: {}", currentTenant);
+            MultiTenantContextProvider.currentTenant.set(currentTenant);
+        } else {
+            logger.info("MultiTenancy unenabled, use tenant: {}", TenantConstants.DEFAULT_TENANT_ID);
+            MultiTenantContextProvider.currentTenant.set(TenantConstants.DEFAULT_TENANT_ID);
+        }
+
     }
 
     /**

@@ -16,9 +16,13 @@ public class TenantCleanInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
+        MultiTenantContextProvider.cleanCurrentTenant();
     }
 
+    /**
+     * 已完成请求时清理租户id
+     * @throws Exception
+     */
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         MultiTenantContextProvider.cleanCurrentTenant();
