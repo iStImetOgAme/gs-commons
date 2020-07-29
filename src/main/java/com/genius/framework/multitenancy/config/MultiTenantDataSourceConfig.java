@@ -21,22 +21,22 @@ import java.util.stream.Collectors;
 @Configuration
 @Component
 @Order(2)
-@ComponentScan(basePackageClasses = PlatTenantConfig.class)
+@ComponentScan(basePackageClasses = TenantConfig.class)
 public class MultiTenantDataSourceConfig implements ApplicationRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(MultiTenantDataSourceConfig.class);
 
     @Autowired
-    private PlatTenantConfig platTenantConfig;
+    private TenantConfig tenantConfig;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
         // 添加配置的租户
-        Boolean multiTenancyEnabled = platTenantConfig.getEnabled();
+        Boolean multiTenancyEnabled = tenantConfig.isEnabled();
         if (multiTenancyEnabled) {
-            List<PlatTenant> tenants = platTenantConfig.getTenants();
-            logger.info("Init tenant dataSource, tenants: {}", tenants.stream().map(PlatTenant::getName).collect(Collectors.toList()));
-            for (PlatTenant tenant : tenants) {
+            List<Tenant> tenants = tenantConfig.getTenants();
+            logger.info("Init tenant dataSource, tenants: {}", tenants.stream().map(Tenant::getName).collect(Collectors.toList()));
+            for (Tenant tenant : tenants) {
                 try {
                     DataSource tenantDataSource = DataSourceBuilder.create()
                             .type(HikariDataSource.class)

@@ -1,7 +1,7 @@
 package com.genius.framework.multitenancy.provider;
 
-import com.genius.framework.multitenancy.config.PlatTenantConfig;
-import com.genius.framework.multitenancy.constants.TenantConstants;
+import com.genius.framework.multitenancy.config.TenantConfig;
+import com.genius.framework.multitenancy.constant.TenantConstant;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class MultiTenantContextProvider {
     private static MultiTenantContextProvider multiTenantContextProvider;
 
     @Autowired
-    private PlatTenantConfig tenantConfig;
+    private TenantConfig tenantConfig;
 
     private static Logger logger = LoggerFactory.getLogger(MultiTenantContextProvider.class);
 
@@ -62,7 +62,7 @@ public class MultiTenantContextProvider {
 
 
     public static DataSource getDefaultDataSource(){
-        DataSource dataSource = dataSourceMap.get(TenantConstants.DEFAULT_TENANT_ID);
+        DataSource dataSource = dataSourceMap.get(TenantConstant.DEFAULT_TENANT_ID);
         if(dataSource == null){
             logger.info("Init default dataSource");
             try {
@@ -96,18 +96,18 @@ public class MultiTenantContextProvider {
                 if(!StringUtils.isEmpty(maxPoolSize)){
                     ((HikariDataSource) defaultDataSource).setMaximumPoolSize(Integer.parseInt(maxPoolSize));
                 }
-                MultiTenantContextProvider.setPlatTenant(TenantConstants.DEFAULT_TENANT_ID, defaultDataSource);
+                MultiTenantContextProvider.setPlatTenant(TenantConstant.DEFAULT_TENANT_ID, defaultDataSource);
                 return defaultDataSource;
             } catch (Exception e){
                 logger.error("Init default dataSource error：{}", e.getMessage());
             }
         }
-        return dataSourceMap.get(TenantConstants.DEFAULT_TENANT_ID);
+        return dataSourceMap.get(TenantConstant.DEFAULT_TENANT_ID);
     }
 
 
     public static DataSource getDataSourceByTenantId(String tenantId) {
-        if (TenantConstants.DEFAULT_TENANT_ID.equals(tenantId)) {
+        if (TenantConstant.DEFAULT_TENANT_ID.equals(tenantId)) {
             return getDefaultDataSource();
         }
         return dataSourceMap.get(tenantId);
@@ -126,12 +126,12 @@ public class MultiTenantContextProvider {
      * @param currentTenant
      */
     public static void setCurrentTenant(String currentTenant) {
-        if (multiTenantContextProvider.tenantConfig.getEnabled()) {
+        if (multiTenantContextProvider.tenantConfig.isEnabled()) {
             logger.info("Switch dataSource, tenant: {}", currentTenant);
             MultiTenantContextProvider.currentTenant.set(currentTenant);
         } else {
-            logger.info("MultiTenancyRepository unenabled, use tenant: {}", TenantConstants.DEFAULT_TENANT_ID);
-            MultiTenantContextProvider.currentTenant.set(TenantConstants.DEFAULT_TENANT_ID);
+            logger.info("MultiTenancyRepository unenabled, use tenant: {}", TenantConstant.DEFAULT_TENANT_ID);
+            MultiTenantContextProvider.currentTenant.set(TenantConstant.DEFAULT_TENANT_ID);
         }
 
     }
@@ -140,7 +140,7 @@ public class MultiTenantContextProvider {
      * 清理当前自定义租户
      */
     public static void cleanCurrentTenant() {
-        MultiTenantContextProvider.currentTenant.set(TenantConstants.DEFAULT_TENANT_ID);
+        MultiTenantContextProvider.currentTenant.set(TenantConstant.DEFAULT_TENANT_ID);
     }
 
     /**

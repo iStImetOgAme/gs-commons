@@ -27,7 +27,7 @@ public class HibernateConfig {
     private JpaProperties jpaProperties;
 
     @Autowired
-    private PlatTenantConfig platTenantConfig;
+    private TenantConfig tenantConfig;
 
     @Bean
     public JpaVendorAdapter jpaVendorAdapter() {
@@ -43,7 +43,7 @@ public class HibernateConfig {
         properties.putAll(jpaProperties.getProperties());
         // 如果启用了多租户配置，则添加获取租户id和切换数据源的配置
         // TODO spring.jpa.open-in-view需要关闭，暂时没有找到好的解决办法
-        if (platTenantConfig.getEnabled()) {
+        if (tenantConfig.isEnabled()) {
             properties.put(Environment.MULTI_TENANT, MultiTenancyStrategy.SCHEMA);
             properties.put(Environment.MULTI_TENANT_CONNECTION_PROVIDER, multiTenantConnectionProviderImpl);
             properties.put(Environment.MULTI_TENANT_IDENTIFIER_RESOLVER, tenantIdentifierResolver);
