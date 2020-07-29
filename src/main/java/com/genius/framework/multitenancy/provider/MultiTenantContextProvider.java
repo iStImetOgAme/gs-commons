@@ -130,7 +130,7 @@ public class MultiTenantContextProvider {
             logger.info("Switch dataSource, tenant: {}", currentTenant);
             MultiTenantContextProvider.currentTenant.set(currentTenant);
         } else {
-            logger.info("MultiTenancy unenabled, use tenant: {}", TenantConstants.DEFAULT_TENANT_ID);
+            logger.info("MultiTenancyRepository unenabled, use tenant: {}", TenantConstants.DEFAULT_TENANT_ID);
             MultiTenantContextProvider.currentTenant.set(TenantConstants.DEFAULT_TENANT_ID);
         }
 
