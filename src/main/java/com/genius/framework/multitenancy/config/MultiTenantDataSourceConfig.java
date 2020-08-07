@@ -32,7 +32,7 @@ public class MultiTenantDataSourceConfig implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         // 添加配置的租户
-        Boolean multiTenancyEnabled = tenantConfig.isEnabled();
+        boolean multiTenancyEnabled = tenantConfig.isEnabled();
         if (multiTenancyEnabled) {
             List<Tenant> tenants = tenantConfig.getTenants();
             logger.info("Init tenant dataSource, tenants: {}", tenants.stream().map(Tenant::getName).collect(Collectors.toList()));
